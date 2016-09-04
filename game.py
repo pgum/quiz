@@ -48,5 +48,5 @@ while len(questions) > 0:
         break 
 
 
-# the end of game
+# the end
 sys.exit(0)
