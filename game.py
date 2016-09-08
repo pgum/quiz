@@ -1,8 +1,7 @@
-import sys
 import random
 from questions import questions
 
-def welcome():
+def print_welcome():
     print 'Welcome to the quiz! Answer to the questions by choosing correct letter: a, b, c or d.'
     print 'For every good answer you get 1 score.'
     print 'Good luck!'
@@ -12,41 +11,38 @@ def random_question(questions):
     questions.remove(question)
     return question
    
-def question_answer(question):
+def print_question(question):
     print question['question']
     print "a. %-25s b. %s" % (question ['answers']['a'], question['answers']['b'])
     print "c. %-25s d. %s" % (question['answers']['c'], question['answers']['d'])
 
-
-welcome()
+def get_answer(question):
+    possible_answers = question['answers'].keys();
+    player_answer = raw_input("Your answer: ").lower()
+    while player_answer not in possible_answers:
+        print 'Choose: %s' % ','.join(possible_answers)
+        print_question(question)
+        player_answer = raw_input("Your answer: ").lower()
+    return player_answer
 
 score = 0
-correct_answers = ['a', 'b', 'c', 'd']
-should_drawn = True
 questions_count = len(questions)
 
-while len(questions) > 0:
-    if should_drawn:
-        question = random_question(questions)
-        should_drawn = True
-   
-    question_answer(question)
-    player_answer = raw_input("Your answer: ").lower()
+print_welcome()
 
-    # checking if it is a correct answer
+while len(questions) > 0:
+    question = random_question(questions)
+    print_question(question)
+    player_answer = get_answer(question)    
+
     if player_answer == question['correct']:
         print "Correct! You get a score!"
         score += 1  
-        if score == questions_count:
-            print 'Congratulations! You answered all the questions. Your score is: ', score
-    elif player_answer not in correct_answers:
-        print 'Choose: a, b, c or d' 
-        should_drawn = False       
-    else: 
-        print "Unfortunately, correct answer is %s. You lost." % (question['correct'].upper())
-        print 'The end. Your score is: ', score
+    else:
+        print "Unfortunately, correct answer is %s. You lost." % (question['correct'].upper())        
         break 
 
-
-# the end
-sys.exit(0)
+if score == questions_count:
+    print 'Congratulations! You answered all the questions. Your score is: ', score
+else: 
+    print 'The end. Your score is: ', score
